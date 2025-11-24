@@ -10,14 +10,19 @@ import UnleashDrone from "./components/UnleashDrone";
 function App() {
   return (
     <>
-      <GuardDroneNavbar />
-      <GlassNavbar />
-      <HeroSection />
-      <DroneProductSection />
-      <ExplorePage />
-      <BoundariesPage />
-      <UnleashDrone />
-      <Footer />
+      {/* FULL PAGE WRAPPER to prevent overflow */}
+      <div className="max-w-7xl mx-auto w-full overflow-x-hidden px-4">
+        <GuardDroneNavbar />
+        <GlassNavbar />
+
+        <HeroSection />
+        <DroneProductSection />
+        <ExplorePage />
+        <BoundariesPage />
+        <UnleashDrone />
+
+        <Footer />
+      </div>
     </>
   );
 }

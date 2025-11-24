@@ -45,7 +45,7 @@ export default function GlassNavbar() {
         <h1
           className={`text-xl font-extrabold tracking-wider ${logoTextClasses}`}
         >
-          QUADRO
+          QUAD
           <br />
           <span className={subTitleClasses}>DRONE</span>
         </h1>
