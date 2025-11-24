@@ -1,0 +1,35 @@
+@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&display=swap');
+@import "tailwindcss";
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+
+:root {
+  --color-bg-primary: #EAD8C7;
+  --color-bg-secondary: #FFFFFF;
+  --color-text-primary: #080808;
+  --color-text-secondary: #444444;
+  --color-accent: #00FF00;
+}
+
+
+.dark {
+  --color-bg-primary: #080808;
+  --color-bg-secondary: #1A1A1A;
+  --color-text-primary: #FFFFFF;
+  --color-text-secondary: #CCCCCC;
+  --color-accent: #00FF00;
+}
+
+
+body {
+  transition:
+    background-color 0.3s ease,
+    color 0.3s ease;
+  font-family: 'Orbitron', sans-serif !important;
+  line-height: 1.5;
+  margin: 0px;
+  padding: 0px;
+}
