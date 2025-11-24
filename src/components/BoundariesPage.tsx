@@ -1,4 +1,4 @@
-import React from "react";
+
 import { useTheme } from "../contexts/ThemeProvider";
 import card1ImageDark from "../assets/card1-dark.png";
 import card1ImageLight from "../assets/card1-dark.png";

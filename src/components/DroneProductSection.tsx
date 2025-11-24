@@ -1,4 +1,4 @@
-import { motion } from "framer-motion";
+
 import droneBg from "../assets/drone-t021-bg.png";
 import { useTheme } from "../contexts/ThemeProvider";
 
