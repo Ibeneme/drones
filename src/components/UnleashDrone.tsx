@@ -18,7 +18,7 @@ export default function UnleashPage() {
           flex flex-col lg:flex-row items-center justify-center 
           gap-8 lg:gap-0 rounded-[48px] overflow-hidden
           transition-colors duration-300
-          ${isDark ? "bg-lime-500 backdrop-blur-md" : "bg-lime-500"}
+          ${isDark ? "bg-[#006BFF] backdrop-blur-md" : "bg-[#006BFF]"}
         `}
       >
         {/* IMAGE SIDE */}
@@ -58,8 +58,8 @@ export default function UnleashPage() {
               transition-colors duration-300
               ${
                 isDark
-                  ? "bg-white text-lime-700 hover:bg-gray-200"
-                  : "bg-black text-lime-300 hover:bg-gray-900"
+                  ? "bg-white text-[#fff] hover:bg-gray-200"
+                  : "bg-black text-[#fff] hover:bg-gray-900"
               }
             `}
           >

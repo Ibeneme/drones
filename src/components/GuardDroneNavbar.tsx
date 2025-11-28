@@ -33,12 +33,8 @@ export default function HeroNavbar() {
             <div className="w-full max-w-[700px] flex items-center justify-between gap-4 mr-[64px]">
               {/* LEFT SIDE: Logo + Text */}
               <div className="flex items-center gap-2">
-                <img src={viteImage} className="w-5 h-8" />
-                <h1 className="text-[14px] font-bold tracking-wider uppercase">
-                  Quad
-                  <br />
-                  Drone
-                </h1>
+                <img src={viteImage} className="w-64 h-8" />
+            
               </div>
 
               {/* RIGHT SIDE: Nav Links */}

@@ -45,9 +45,10 @@ export default function HeroSection() {
       </motion.div>
 
       {/* Main Content */}
-      <div className="relative w-full pt-[120px] md:pt-[0px]  overflow-hidden">
+      <div className="relative w-full pt-[120px] md:pt-[0px]  p-0 overflow-hidden">
         {/* Background Overlay */}
-        <div className="absolute inset-0 md:bg-transparent bg-black/40  z-0"></div>
+{/* TRUE Full-Width Overlay */}
+<div className="absolute inset-0 w-screen left-1/2 right-1/2 -translate-x-1/2 bg-black/40 md:bg-transparent z-0"></div>
         <img
           src={currentHeroBg}
           alt="Drone background"
@@ -107,7 +108,7 @@ export default function HeroSection() {
                 <motion.button
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
-                  className="px-10 py-4 rounded-2xl text-lg font-bold tracking-wider bg-gray-300 border-2 border-gray-300 text-black hover:bg-white/10 hover:border-emerald-500 transition-all duration-300"
+                  className="px-10 py-4 rounded-2xl text-lg font-bold tracking-wider bg-gray-300 border-2 border-gray-300 text-black  transition-all duration-300"
                 >
                   SHOP DRONES
                 </motion.button>
@@ -142,7 +143,7 @@ export default function HeroSection() {
                 <motion.div
                   animate={{ opacity: [0.4, 0.8, 0.4] }}
                   transition={{ duration: 4, repeat: Infinity }}
-                  className="absolute -inset-4 bg-emerald-500 rounded-full blur-3xl opacity-40 -z-10"
+                  className="absolute -inset-4 rounded-full blur-3xl opacity-40 -z-10"
                 />
               </motion.div>
             </motion.div>

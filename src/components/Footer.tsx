@@ -27,15 +27,15 @@ export default function Footer() {
           />
           <defs>
             <linearGradient id="gradient" x1="0%" y1="0%" x2="100%" y2="0%">
-              <stop offset="0%" stopColor="#a3e635" stopOpacity="0" />
-              <stop offset="50%" stopColor="#a3e635" stopOpacity="1" />
-              <stop offset="100%" stopColor="#a3e635" stopOpacity="0" />
+              <stop offset="0%" stopColor="#006BFF" stopOpacity="0" />
+              <stop offset="50%" stopColor="#006BFF" stopOpacity="1" />
+              <stop offset="100%" stopColor="#006BFF" stopOpacity="0" />
             </linearGradient>
           </defs>
         </svg>
 
         {/* Extra glow effect */}
-        <div className="absolute inset-x-0 top-0 h-px bg-lime-400 blur-md" />
+        <div className="absolute inset-x-0 top-0 h-px bg-[#006BFF] blur-md" />
       </div>
 
       <div className="relative container mx-auto px-8 py-20 pt-32">
@@ -43,21 +43,14 @@ export default function Footer() {
           {/* Logo & Copyright */}
           <div className="flex flex-col items-start space-y-8">
             <div className="flex items-center gap-3">
-              <img src={viteImage} className="w-5 h-8" />
-              <span
-                className={`text-2xl font-bold tracking-wider ${
-                  isDark ? "text-white" : "text-black"
-                }`}
-              >
-                QUAD DRONE
-              </span>
+              <img src={viteImage} className="w-64 h-8" />
             </div>
             <p
               className={`text-sm leading-relaxed ${
                 isDark ? "text-gray-500" : "text-gray-700"
               }`}
             >
-              2024 FlyDrone, Inc.
+              2024 Aero Emperor, Inc.
               <br />
               All rights reserved.
             </p>
@@ -65,7 +58,7 @@ export default function Footer() {
 
           {/* Company */}
           <div>
-            <h3 className="text-lime-400 font-bold text-sm tracking-wider mb-6">
+            <h3 className="text-[#006BFF] font-bold text-sm tracking-wider mb-6">
               Company
             </h3>
             <ul
@@ -92,7 +85,7 @@ export default function Footer() {
 
           {/* Resources */}
           <div>
-            <h3 className="text-lime-400 font-bold text-sm tracking-wider mb-6">
+            <h3 className="text-[#006BFF] font-bold text-sm tracking-wider mb-6">
               Resources
             </h3>
             <ul
@@ -117,7 +110,7 @@ export default function Footer() {
 
           {/* Connect */}
           <div>
-            <h3 className="text-lime-400 font-bold text-sm tracking-wider mb-6">
+            <h3 className="text-[#006BFF] font-bold text-sm tracking-wider mb-6">
               Connect
             </h3>
             <ul
@@ -155,7 +148,7 @@ export default function Footer() {
               : "border-black/10 text-gray-600"
           }`}
         >
-          © 2024 FlyDrone, Inc. All rights reserved.
+          © 2024 Aero Emperor, Inc. All rights reserved.
         </div>
       </div>
     </footer>

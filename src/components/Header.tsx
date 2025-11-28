@@ -17,7 +17,7 @@ const COLORS = {
   TEXT_SECONDARY_LIGHT: "#444444",
 
   // Accent Color (Neon Green - same for both)
-  ACCENT: "#00FF00",
+  ACCENT: "#006BFF",
 };
 
 const Header: React.FC = () => {

@@ -1,5 +1,5 @@
 
-import droneBg from "../assets/drone-t021-bg.png";
+import droneBg from "../assets/drone-t025-bg.png";
 import { useTheme } from "../contexts/ThemeProvider";
 
 export default function DroneShowcase() {
