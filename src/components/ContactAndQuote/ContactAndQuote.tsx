@@ -1,9 +1,9 @@
 import React, { useState } from "react";
 import { motion } from "framer-motion";
+import type { Variants } from "framer-motion";
 import { Mail, Phone, MapPin, Send, Info } from "lucide-react";
 
-// --- 1. Data Definitions ---
-
+// --- Contact Info ---
 const contactInfo = [
   {
     icon: Mail,
@@ -25,52 +25,43 @@ const contactInfo = [
   },
 ];
 
-// --- 2. Framer Motion Animation Variants (Kept the same) ---
-
-const sectionVariants = {
+// --- Framer Motion Variants ---
+const sectionVariants: Variants = {
   hidden: { y: 20, opacity: 0 },
   visible: { y: 0, opacity: 1, transition: { duration: 0.6 } },
 };
 
-const cardContainerVariants = {
-  visible: {
-    transition: {
-      staggerChildren: 0.1,
-    },
-  },
+const cardContainerVariants: Variants = {
+  visible: { transition: { staggerChildren: 0.1 } },
 };
 
-const cardItemVariants = {
+const cardItemVariants: Variants = {
   hidden: { y: 20, opacity: 0 },
   visible: {
     y: 0,
     opacity: 1,
-    transition: { type: "spring", stiffness: 100 },
+    transition: { type: "spring", stiffness: 100, damping: 20 },
   },
 };
 
-// --- 3. Custom Form Hook (Kept the same) ---
-
+// --- Custom Form Hook ---
 const useForm = (initialState: any) => {
   const [values, setValues] = useState(initialState);
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
-    setValues({
-      ...values,
-      [e.target.name]: e.target.value,
-    });
+    setValues({ ...values, [e.target.name]: e.target.value });
   };
   return { values, handleChange, setValues };
 };
 
-// --- 4. Main Component Interface and Definition ---
-
+// --- Props Interface ---
 interface ContactAndQuoteProps {
-  contactRef: React.RefObject<HTMLDivElement>;
-  quoteRef: React.RefObject<HTMLDivElement>;
+  contactRef: React.RefObject<HTMLDivElement | null>;
+  quoteRef: React.RefObject<HTMLDivElement | null>;
 }
 
+// --- Component ---
 const ContactAndQuote: React.FC<ContactAndQuoteProps> = ({
   contactRef,
   quoteRef,
@@ -85,22 +76,18 @@ const ContactAndQuote: React.FC<ContactAndQuoteProps> = ({
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    console.log("Form Submitted:", values);
-    // Add your actual API submission logic here
     alert("Quote request submitted! We will contact you within 24 hours.");
+    console.log(values);
   };
 
   return (
-    // The main section now only has styling, the refs are applied internally
-    <section id="contact-section" className="bg-gray-50 py-16 sm:py-24">
+    <section className="bg-gray-50 py-16 sm:py-24">
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-        {/* ================================== */}
-        {/* Section 1: Request a Quote Form (Receives 'quoteRef') */}
-        {/* ================================== */}
+        {/* Quote Form */}
         <motion.div
-          id="quote" // Add ID here for consistency, but the ref is the main target
-          ref={quoteRef} // ATTACHING THE QUOTE REF HERE (Targeted by "Get Quote" button)
-          className="bg-white p-6 md:p-10 rounded-xl shadow-2xl border border-blue-100" // Elevated card styling
+          id="quote"
+          ref={quoteRef}
+          className="bg-white p-6 md:p-10 rounded-xl shadow-2xl border border-blue-100"
           initial="hidden"
           whileInView="visible"
           viewport={{ once: true, amount: 0.1 }}
@@ -120,7 +107,6 @@ const ContactAndQuote: React.FC<ContactAndQuoteProps> = ({
           </div>
 
           <form onSubmit={handleSubmit} className="text-left">
-            {/* Two-Column Inputs */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
               {/* Full Name */}
               <div className="flex flex-col">
@@ -141,7 +127,7 @@ const ContactAndQuote: React.FC<ContactAndQuoteProps> = ({
                   className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:ring-blue-600 focus:border-blue-600 sm:text-sm"
                 />
               </div>
-              {/* Email Address */}
+              {/* Email */}
               <div className="flex flex-col">
                 <label
                   htmlFor="emailAddress"
@@ -160,7 +146,7 @@ const ContactAndQuote: React.FC<ContactAndQuoteProps> = ({
                   className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:ring-blue-600 focus:border-blue-600 sm:text-sm"
                 />
               </div>
-              {/* Phone Number */}
+              {/* Phone */}
               <div className="flex flex-col">
                 <label
                   htmlFor="phoneNumber"
@@ -178,7 +164,7 @@ const ContactAndQuote: React.FC<ContactAndQuoteProps> = ({
                   className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:ring-blue-600 focus:border-blue-600 sm:text-sm"
                 />
               </div>
-              {/* Service Required */}
+              {/* Service */}
               <div className="flex flex-col">
                 <label
                   htmlFor="serviceRequired"
@@ -190,7 +176,7 @@ const ContactAndQuote: React.FC<ContactAndQuoteProps> = ({
                   type="text"
                   name="serviceRequired"
                   id="serviceRequired"
-                  placeholder="e.g., Aerial Photography, Surveying"
+                  placeholder="e.g., Aerial Photography"
                   value={values.serviceRequired}
                   onChange={handleChange}
                   required
@@ -199,7 +185,6 @@ const ContactAndQuote: React.FC<ContactAndQuoteProps> = ({
               </div>
             </div>
 
-            {/* Project Details (Textarea) */}
             <div className="mb-6 flex flex-col">
               <label
                 htmlFor="projectDetails"
@@ -211,7 +196,7 @@ const ContactAndQuote: React.FC<ContactAndQuoteProps> = ({
                 name="projectDetails"
                 id="projectDetails"
                 rows={4}
-                placeholder="Please describe your project requirements, location, timeline, and any specific needs..."
+                placeholder="Describe your project requirements..."
                 value={values.projectDetails}
                 onChange={handleChange}
                 required
@@ -219,19 +204,16 @@ const ContactAndQuote: React.FC<ContactAndQuoteProps> = ({
               />
             </div>
 
-            {/* Privacy Note */}
             <div className="flex items-center text-xs text-gray-500 mb-8">
               <Info className="w-4 h-4 mr-1.5 flex-shrink-0 text-blue-500" />
               Your data is safe. We use SSL encryption and never share your
               details with third parties.
             </div>
 
-            {/* Submit Button (Gradient) */}
             <div>
               <button
                 type="submit"
-                className="inline-flex items-center justify-center w-full px-6 py-3 border border-transparent text-base font-medium rounded-md shadow-lg text-white 
-                           bg-gradient-to-r from-blue-600 to-indigo-700 hover:from-blue-700 hover:to-indigo-800 transition"
+                className="inline-flex items-center justify-center w-full px-6 py-3 border border-transparent text-base font-medium rounded-md shadow-lg text-white bg-gradient-to-r from-blue-600 to-indigo-700 hover:from-blue-700 hover:to-indigo-800 transition"
               >
                 Submit Quote Request
                 <Send className="ml-2 w-4 h-4" />
@@ -240,13 +222,14 @@ const ContactAndQuote: React.FC<ContactAndQuoteProps> = ({
           </form>
         </motion.div>
 
+        {/* Other Contact Info */}
         <motion.div
           className="text-center mb-10 pt-16"
           initial="hidden"
           whileInView="visible"
           viewport={{ once: true, amount: 0.1 }}
           variants={sectionVariants}
-          ref={contactRef} // ATTACHING THE CONTACT REF HERE (Targeted by "Contact" link)
+          ref={contactRef}
         >
           <h2 className="text-3xl md:text-4xl font-extrabold text-gray-900 mb-2">
             Other Ways to Connect
@@ -270,8 +253,6 @@ const ContactAndQuote: React.FC<ContactAndQuoteProps> = ({
               variants={cardItemVariants}
             >
               <div className="p-3 bg-blue-600 text-white rounded-full mb-3 shadow-md">
-                {" "}
-                {/* Accent color on icon background */}
                 <item.icon className="w-6 h-6" />
               </div>
               <p className="text-lg font-bold text-gray-900 mb-1">

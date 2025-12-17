@@ -12,7 +12,6 @@ import {
   Ship,
   Moon,
   Map,
-  DollarSign,
   Calendar,
   Info,
   AlertTriangle,

@@ -1,5 +1,6 @@
 import React from "react";
 import { motion } from "framer-motion";
+import type { Variants } from "framer-motion";
 import { Star } from "lucide-react";
 import serv1 from "../../assets/images/serv1.jpeg";
 import serv2 from "../../assets/images/serv2.jpeg";
@@ -73,16 +74,19 @@ const testimonials: Testimonial[] = [
   },
 ];
 
-const containerVariants = {
+const containerVariants: Variants = {
   hidden: { opacity: 0 },
   visible: { opacity: 1, transition: { staggerChildren: 0.1 } },
 };
 
-const cardVariants = {
+const cardVariants: Variants = {
   hidden: { y: 30, opacity: 0 },
-  visible: { y: 0, opacity: 1, transition: { type: "spring", stiffness: 80 } },
+  visible: {
+    y: 0,
+    opacity: 1,
+    transition: { type: "spring" as const, stiffness: 80 },
+  },
 };
-
 const ProjectCard: React.FC<{ project: Project }> = ({ project }) => (
   <motion.div
     className="bg-white rounded-xl overflow-hidden border border-gray-100"

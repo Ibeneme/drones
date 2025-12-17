@@ -24,22 +24,22 @@ const Home: React.FC = () => {
     }
   }, []);
 
+  // All useRefs are already correctly typed as RefObject<HTMLDivElement | null>
   const homeRef = useRef<HTMLDivElement>(null);
   const servicesRef = useRef<HTMLDivElement>(null);
 
-  // NOTE: These refs are passed down to FeaturesAndIndustries to attach to sub-sections
   const featuresRef = useRef<HTMLDivElement>(null);
   const industriesRef = useRef<HTMLDivElement>(null);
 
   const portfolioRef = useRef<HTMLDivElement>(null);
 
-  // 1. Define separate refs for the two parts of the Contact/Quote section
   const quoteRef = useRef<HTMLDivElement>(null);
   const contactRef = useRef<HTMLDivElement>(null);
 
   // Scroll function
   const scrollToSection = (section: string) => {
-    let ref: React.RefObject<HTMLDivElement> | null = null;
+    // FIX: Change the local 'ref' variable type to explicitly match the useRef types.
+    let ref: React.RefObject<HTMLDivElement | null> | null = null;
 
     switch (section) {
       case "home":
@@ -57,7 +57,6 @@ const Home: React.FC = () => {
       case "portfolio":
         ref = portfolioRef;
         break;
-      // 2. Map 'contact' and 'quote' to the new separate refs
       case "contact":
         ref = contactRef; // Scrolls to the general contact info area
         break;
@@ -68,7 +67,8 @@ const Home: React.FC = () => {
         return;
     }
 
-    // Scroll with an offset to account for the fixed Navbar
+    // Scroll with an offset to account for the fixed NavBar
+    // The check ref?.current already handles the HTMLDivElement | null type
     if (ref?.current) {
       const offset = -70; // Adjust based on your NavBar height
       const top =
@@ -89,7 +89,6 @@ const Home: React.FC = () => {
         <ServicesSection />
       </div>
 
-      {/* RENDER COMPONENT: It handles placing the two refs internally */}
       <FeaturesAndIndustries
         featuresRef={featuresRef}
         industriesRef={industriesRef}
@@ -99,7 +98,9 @@ const Home: React.FC = () => {
         <PortfolioAndTestimonials />
       </div>
 
-      {/* FIXED: Wrapping div for general section tracking (used by active section logic in NavBar) */}
+      {/* The NavBar's active section logic relies on the ID="contact" 
+          to be attached to the parent div containing both contact/quote.
+          We use quoteRef here to cover the top of the combined section. */}
       <div id="contact" ref={quoteRef}>
         <ContactAndQuote contactRef={contactRef} quoteRef={quoteRef} />
       </div>

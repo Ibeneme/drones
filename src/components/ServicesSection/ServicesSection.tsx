@@ -7,6 +7,7 @@ import serv3 from "../../assets/images/serv3.jpeg";
 import serv4 from "../../assets/images/serv4.jpeg";
 import serv5 from "../../assets/images/serv5.jpeg";
 import serv6 from "../../assets/images/serv6.jpeg";
+import type { Variants } from "framer-motion";
 
 interface Service {
   icon: React.ElementType<any>;
@@ -60,26 +61,19 @@ const services: Service[] = [
   },
 ];
 
-const containerVariants = {
-  visible: {
-    transition: {
-      staggerChildren: 0.15,
-    },
-  },
+const containerVariants: Variants = {
+  hidden: { opacity: 0 },
+  visible: { opacity: 1, transition: { staggerChildren: 0.1 } },
 };
 
-const cardVariants = {
-  hidden: { y: 50, opacity: 0 },
+const cardVariants: Variants = {
+  hidden: { y: 30, opacity: 0 },
   visible: {
     y: 0,
     opacity: 1,
-    transition: {
-      type: "spring",
-      stiffness: 70,
-    },
+    transition: { type: "spring" as const, stiffness: 80 },
   },
 };
-
 const ServiceCard: React.FC<{ service: Service }> = ({ service }) => {
   const IconComponent = service.icon;
 

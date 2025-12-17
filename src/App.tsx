@@ -7,10 +7,16 @@ import FAQSection from "./Pages/Faq";
 import RateCard from "./Pages/RateCard";
 
 function App() {
+  // Scroll to a section by id
+  const scrollToSection = (section: string) => {
+    const el = document.getElementById(section);
+    if (el) el.scrollIntoView({ behavior: "smooth" });
+  };
+
   return (
     <Router>
       <div className="flex flex-col min-h-screen">
-        <NavBar />
+        <NavBar scrollToSection={scrollToSection} />
         <main className="flex-1">
           <Routes>
             <Route path="/" element={<Home />} />

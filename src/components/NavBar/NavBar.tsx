@@ -46,12 +46,17 @@ const NavBar: React.FC<NavBarProps> = ({ scrollToSection }) => {
     setIsMobileMenuOpen(false);
   };
 
-  // UPDATED: Now all internal main sections use the 'link' type
-  // 'route' is for new pages like FAQ
-  const desktopLinks = [
-    // Home button remains a simple scroll to the top
+  type LinkType = "scroll" | "link" | "route";
+
+  interface NavLink {
+    name: string;
+    type: LinkType;
+    target: string;
+    href: string;
+  }
+
+  const desktopLinks: NavLink[] = [
     { name: "Home", type: "scroll", target: "home", href: "/" },
-    // These link to the home page URL with a hash, e.g., /#services
     { name: "Services", type: "link", target: "services", href: "/#services" },
     {
       name: "Industries",
@@ -65,7 +70,6 @@ const NavBar: React.FC<NavBarProps> = ({ scrollToSection }) => {
       target: "portfolio",
       href: "/#portfolio",
     },
-    // New separate pages
     { name: "FAQ", type: "route", target: "/faq", href: "/faq" },
     {
       name: "Rate Cards",
@@ -73,7 +77,6 @@ const NavBar: React.FC<NavBarProps> = ({ scrollToSection }) => {
       target: "/rate-card",
       href: "/rate-card",
     },
-    // Contact link points to home page with a hash
     { name: "Contact", type: "link", target: "contact", href: "/#contact" },
   ];
 
@@ -159,7 +162,7 @@ const NavBar: React.FC<NavBarProps> = ({ scrollToSection }) => {
 
         {/* Desktop Menu */}
         <div className="hidden md:flex items-center space-x-6">
-          {desktopLinks.map((link) => renderNavItem(link))}
+          {desktopLinks.map((link) => renderNavItem(link as any))}
 
           {/* Desktop Get Quote Button (Gradient) */}
           <button
