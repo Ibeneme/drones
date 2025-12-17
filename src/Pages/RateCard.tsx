@@ -338,31 +338,31 @@ const RateCard: React.FC<RateCardProps> = ({ serv1 }) => {
           )}
         </AnimatePresence>
 
-        <div className="mt-16 pt-8 backdrop-blur-md bg-white/10 p-6 rounded-lg">
+        <div className="mt-16 pt-8 backdrop-blur-md bg-blue-600  p-6 rounded-lg">
           <h3 className="text-xl font-extrabold text-white mb-6 flex items-center">
-            <AlertTriangle className="w-6 h-6 text-red-500 mr-3" />
+            <AlertTriangle className="w-6 h-6 text-white mr-3" />
             Important Notes & Policy
           </h3>
           <ul className="space-y-3 text-sm text-white">
             <li className="flex items-start">
-              <CheckCircle className="w-5 h-5 text-blue-400 mr-3 mt-1 flex-shrink-0" />
+              <CheckCircle className="w-5 h-5  mr-3 mt-1 flex-shrink-0" />
               <span className="font-medium">Excludes VAT:</span> All listed
               rates are exclusive of Value Added Tax.
             </li>
             <li className="flex items-start">
-              <CheckCircle className="w-5 h-5 text-blue-400 mr-3 mt-1 flex-shrink-0" />
+              <CheckCircle className="w-5 h-5  mr-3 mt-1 flex-shrink-0" />
               <span className="font-medium">Scope Changes:</span> Weather
               delays, additional locations, extended flight time, or scope
               changes may incur additional charges.
             </li>
             <li className="flex items-start">
-              <CheckCircle className="w-5 h-5 text-blue-400 mr-3 mt-1 flex-shrink-0" />
+              <CheckCircle className="w-5 h-5  mr-3 mt-1 flex-shrink-0" />
               <span className="font-medium">Additional Costs:</span>{" "}
               Permissions, specialist permits, travel, and accommodation are
               quoted separately where applicable.
             </li>
             <li className="flex items-start">
-              <CheckCircle className="w-5 h-5 text-blue-400 mr-3 mt-1 flex-shrink-0" />
+              <CheckCircle className="w-5 h-5  mr-3 mt-1 flex-shrink-0" />
               <span className="font-medium">Final Pricing:</span> Pricing is
               confirmed only after a comprehensive project briefing.
             </li>
