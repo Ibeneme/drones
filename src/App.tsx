@@ -1,42 +1,28 @@
-import { useTheme } from "./contexts/ThemeProvider";
-
-import BoundariesPage from "./components/BoundariesPage";
-import DroneProductSection from "./components/DroneProductSection";
-import ExplorePage from "./components/ExplorePage";
-import Footer from "./components/Footer";
-import GlassNavbar from "./components/GlassNavbar";
-import GuardDroneNavbar from "./components/GuardDroneNavbar";
-import HeroSection from "./components/HeroSection";
-import UnleashDrone from "./components/UnleashDrone";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import Home from "./Pages/Home";
+import Footer from "./components/Footer/Footer";
+import NavBar from "./components/NavBar/NavBar";
+import NotFoundPage from "./components/NotFound/NotFoundPage";
+import FAQSection from "./Pages/Faq";
+import RateCard from "./Pages/RateCard";
 
 function App() {
-  const { theme } = useTheme();
-  const isDark = theme === "dark";
-
   return (
-    <div
-      className={`
-        min-h-screen w-full 
-        transition-colors duration-500 
-        ${isDark ? "bg-black text-white" : "bg-white text-gray-900"}
-      `}
-    >
-      <div className="max-w-7xl mx-auto w-full overflow-x-hidden px-4">
-        {/* Navbars */}
-        <GuardDroneNavbar />
-        <GlassNavbar />
+    <Router>
+      <div className="flex flex-col min-h-screen">
+        <NavBar />
+        <main className="flex-1">
+          <Routes>
+            <Route path="/" element={<Home />} />
+            <Route path="/faq" element={<FAQSection />} />
+            <Route path="/rate-card" element={<RateCard />} />
+            <Route path="*" element={<NotFoundPage />} />
+          </Routes>
+        </main>
 
-        {/* Sections */}
-        <HeroSection />
-       	<DroneProductSection />
-        <ExplorePage />
-        <BoundariesPage />
-        <UnleashDrone />
-
-        {/* Footer */}
         <Footer />
       </div>
-    </div>
+    </Router>
   );
 }
 
