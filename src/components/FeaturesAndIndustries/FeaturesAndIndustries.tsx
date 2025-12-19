@@ -1,6 +1,7 @@
 import React from "react";
-import { motion } from "framer-motion";
+import { motion, useScroll, useTransform } from "framer-motion";
 import type { Variants } from "framer-motion";
+import { useTheme } from "../../contexts/ThemeProvider";
 import {
   ShieldCheck,
   Zap,
@@ -15,158 +16,202 @@ import {
   Package,
 } from "lucide-react";
 
-// --- Data Definitions ---
-interface CardData {
-  icon: React.ElementType<any>;
-  title: string;
-  description: string;
+interface FeaturesAndIndustriesProps {
+  featuresRef?: React.RefObject<HTMLDivElement | null>;
+  industriesRef?: React.RefObject<HTMLDivElement | null>;
 }
 
-const features: CardData[] = [
+const features = [
   {
     icon: FileBadge,
     title: "Certified Pilots",
-    description: "CAA-certified professionals...",
+    description:
+      "CAA-certified professionals with extensive flight experience.",
   },
   {
     icon: Cpu,
     title: "Advanced Equipment",
-    description: "Latest DJI and professional-grade drones...",
+    description:
+      "Utilizing the latest DJI and professional-grade drone fleets.",
   },
   {
     icon: Package,
     title: "Full Compliance",
-    description: "All operations meet UK airspace regulations...",
+    description: "All operations meet strict UK airspace regulations.",
   },
   {
     icon: Zap,
     title: "Fast Turnaround",
-    description: "Quick project completion...",
+    description: "Rapid data processing and project delivery within 48 hours.",
   },
   {
     icon: Calendar,
     title: "24/7 Operations",
-    description: "Flexible scheduling including night flights...",
+    description:
+      "Flexible scheduling including night flights and emergency response.",
   },
   {
     icon: Star,
     title: "Professional Results",
-    description: "Stunning 4K footage and high-resolution imagery...",
+    description: "Stunning 4K footage and sub-centimeter accuracy in imagery.",
   },
 ];
 
-const industries: CardData[] = [
-  { icon: Home, title: "Real Estate", description: "Showcase properties..." },
-  { icon: HardHat, title: "Construction", description: "Monitor progress..." },
-  {
-    icon: Briefcase,
-    title: "Events",
-    description: "Capture weddings, festivals...",
-  },
-  {
-    icon: Megaphone,
-    title: "Advertising",
-    description: "Create compelling marketing content...",
-  },
-  {
-    icon: ShieldCheck,
-    title: "Infrastructure",
-    description: "Inspect bridges, power lines...",
-  },
+const industries = [
+  { icon: Home, title: "Real Estate" },
+  { icon: HardHat, title: "Construction" },
+  { icon: Briefcase, title: "Events" },
+  { icon: Megaphone, title: "Advertising" },
+  { icon: ShieldCheck, title: "Infrastructure" },
 ];
 
-// --- Framer Motion Variants ---
 const containerVariants: Variants = {
   hidden: { opacity: 0 },
   visible: { opacity: 1, transition: { staggerChildren: 0.1 } },
 };
 
 const itemVariants: Variants = {
-  hidden: { y: 30, opacity: 0 },
+  hidden: { y: 20, opacity: 0 },
   visible: {
     y: 0,
     opacity: 1,
-    transition: { type: "spring", stiffness: 80, damping: 20 },
+    transition: { type: "spring", stiffness: 100, damping: 15 },
   },
 };
-
-// --- Feature Card Component ---
-const FeatureCard: React.FC<CardData> = ({
-  icon: Icon,
-  title,
-  description,
-}) => (
-  <motion.div
-    className="items-start gap-4 p-6 bg-white border border-gray-200 rounded-xl"
-    variants={itemVariants}
-  >
-    <div className="flex items-center justify-center w-12 h-12 bg-blue-50 text-blue-600 rounded-lg border border-blue-100 mb-8">
-      <Icon className="w-6 h-6" />
-    </div>
-    <div>
-      <h3 className="text-lg font-semibold text-gray-900 mb-1">{title}</h3>
-      <p className="text-sm text-gray-600">{description}</p>
-    </div>
-  </motion.div>
-);
-
-// --- Main Component ---
-interface FeaturesAndIndustriesProps {
-  featuresRef?: React.RefObject<HTMLDivElement | null>;
-  industriesRef?: React.RefObject<HTMLDivElement | null>;
-}
 
 const FeaturesAndIndustries: React.FC<FeaturesAndIndustriesProps> = ({
   featuresRef,
   industriesRef,
-}) => (
-  <section className="bg-gray-50 py-16 sm:py-24">
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-      {/* Features */}
-      <div ref={featuresRef} className="text-center mb-20">
-        <p className="text-sm font-medium text-blue-600 bg-blue-100/50 py-1 px-3 inline-block rounded-full mb-3">
-          Why Choose Us
-        </p>
-        <h2 className="text-3xl md:text-4xl font-extrabold text-gray-900">
-          Excellence in Every Flight
-        </h2>
+}) => {
+  const { theme } = useTheme();
+  const isDark = theme === "dark";
+  const sectionRef = React.useRef(null);
+
+  const { scrollYProgress } = useScroll({
+    target: sectionRef,
+    offset: ["start end", "end start"],
+  });
+  const headerY = useTransform(scrollYProgress, [0, 1], [-30, 30]);
+
+  return (
+    <section
+      ref={sectionRef}
+      className={`py-24 sm:py-32 transition-colors duration-500 ${
+        isDark ? "bg-black" : "bg-white"
+      }`}
+    >
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div ref={featuresRef} className="text-center mb-16 scroll-mt-32">
+          <motion.div style={{ y: headerY }}>
+            <p
+              className={`text-xs font-black uppercase tracking-[0.3em] mb-4 ${
+                isDark ? "text-blue-500" : "text-blue-600"
+              }`}
+            >
+              Why Choose Us
+            </p>
+            <h2
+              className={`text-4xl md:text-5xl font-black mb-12 ${
+                isDark ? "text-white" : "text-gray-900"
+              }`}
+            >
+              Excellence in Every <span className="text-blue-500">Flight</span>
+            </h2>
+          </motion.div>
+        </div>
+
+        <motion.div
+          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-40"
+          variants={containerVariants}
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, amount: 0.1 }}
+        >
+          {features.map((f) => (
+            <motion.div
+              key={f.title}
+              variants={itemVariants}
+              whileHover={{ y: -5 }}
+              className={`p-8 rounded-2xl border ${
+                isDark
+                  ? "bg-white/5 border-white/10 text-white"
+                  : "bg-white border-gray-100 shadow-md"
+              }`}
+            >
+              <div
+                className={`w-14 h-14 rounded-xl mb-6 flex items-center justify-center ${
+                  isDark
+                    ? "bg-blue-500/20 text-blue-400"
+                    : "bg-blue-50 text-blue-600"
+                }`}
+              >
+                <f.icon />
+              </div>
+              <h3 className="text-xl font-bold mb-3">{f.title}</h3>
+              <p
+                className={`text-sm ${
+                  isDark ? "text-gray-400" : "text-gray-600"
+                }`}
+              >
+                {f.description}
+              </p>
+            </motion.div>
+          ))}
+        </motion.div>
+
+        <div ref={industriesRef} className="relative scroll-mt-32">
+          <div className="text-center mb-16 relative z-10">
+            <motion.div style={{ y: headerY }}>
+              <p
+                className={`text-xs font-black uppercase tracking-[0.3em] mb-4 ${
+                  isDark ? "text-blue-500" : "text-blue-600"
+                }`}
+              >
+                Industries We Serve
+              </p>
+              <h2
+                className={`text-4xl md:text-5xl font-black ${
+                  isDark ? "text-white" : "text-gray-900"
+                }`}
+              >
+                Versatile Solutions
+              </h2>
+            </motion.div>
+          </div>
+
+          <motion.div
+            className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4"
+            variants={containerVariants}
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true }}
+          >
+            {industries.map((ind) => (
+              <motion.div
+                key={ind.title}
+                variants={itemVariants}
+                whileHover={{ y: -8 }}
+                className={`p-6 rounded-2xl text-center border ${
+                  isDark
+                    ? "bg-white/5 border-white/5 text-white"
+                    : "bg-gray-50 border-gray-100 shadow-sm"
+                }`}
+              >
+                <ind.icon
+                  className={`w-8 h-8 mx-auto mb-4 ${
+                    isDark ? "text-blue-400" : "text-blue-600"
+                  }`}
+                />
+                <h3 className="text-xs font-bold uppercase tracking-widest">
+                  {ind.title}
+                </h3>
+              </motion.div>
+            ))}
+          </motion.div>
+        </div>
       </div>
-
-      <motion.div
-        className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-24"
-        variants={containerVariants}
-        initial="hidden"
-        whileInView="visible"
-        viewport={{ once: true, amount: 0.1 }}
-      >
-        {features.map((feature) => (
-          <FeatureCard key={feature.title} {...feature} />
-        ))}
-      </motion.div>
-
-      {/* Industries */}
-      <div ref={industriesRef} className="text-center mb-16 pt-10">
-        <p className="text-sm font-medium text-blue-600 bg-blue-100/50 py-1 px-3 inline-block rounded-full mb-3">
-          Industries We Serve
-        </p>
-        <h2 className="text-3xl md:text-4xl font-extrabold text-gray-900">
-          Versatile Solutions Across Sectors
-        </h2>
-      </div>
-
-      <motion.div
-        className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
-        variants={containerVariants}
-        initial="hidden"
-        whileInView="visible"
-        viewport={{ once: true, amount: 0.1 }}
-      >
-        {industries.map((industry) => (
-          <FeatureCard key={industry.title} {...industry} />
-        ))}
-      </motion.div>
-    </div>
-  </section>
-);
+    </section>
+  );
+};
 
 export default FeaturesAndIndustries;

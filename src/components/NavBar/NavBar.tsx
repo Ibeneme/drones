@@ -1,14 +1,21 @@
 import React, { useState, useEffect } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 import { FaBars, FaTimes } from "react-icons/fa";
-import { Camera } from "lucide-react";
+import { ChevronRight, Sun, Moon } from "lucide-react";
+import { useTheme } from "../../contexts/ThemeProvider";
+import viteimage from "../../assets/vite.png";
 
 interface NavBarProps {
   scrollToSection: (section: string) => void;
 }
 
 const NavBar: React.FC<NavBarProps> = ({ scrollToSection }) => {
+  const { theme, toggleTheme } = useTheme();
+  const isDark = theme === "dark";
+
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [activeSection, setActiveSection] = useState("home");
+  const [scrolled, setScrolled] = useState(false);
 
   const scrollableSections = [
     "home",
@@ -20,7 +27,8 @@ const NavBar: React.FC<NavBarProps> = ({ scrollToSection }) => {
 
   useEffect(() => {
     const handleScroll = () => {
-      const scrollPos = window.scrollY + 100;
+      setScrolled(window.scrollY > 20);
+      const scrollPos = window.scrollY + 120;
       scrollableSections.forEach((section) => {
         const el = document.getElementById(section);
         if (
@@ -32,24 +40,9 @@ const NavBar: React.FC<NavBarProps> = ({ scrollToSection }) => {
         }
       });
     };
-
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
-
-  /**
-   * UPDATED: Logic to handle internal scrolls vs cross-page navigation
-   */
-  const handleQuoteClick = () => {
-    if (window.location.pathname !== "/") {
-      // If NOT on home (e.g., /faq or /rate-card), redirect to home with hash
-      window.location.href = "/#quote";
-    } else {
-      // If ON home, perform smooth scroll
-      scrollToSection("quote");
-    }
-    setIsMobileMenuOpen(false);
-  };
 
   const handleNavClick = (section: string) => {
     if (window.location.pathname !== "/") {
@@ -60,123 +53,193 @@ const NavBar: React.FC<NavBarProps> = ({ scrollToSection }) => {
     setIsMobileMenuOpen(false);
   };
 
+  // Updated array with About and Pricing
   const desktopLinks = [
-    { name: "Home", type: "scroll", target: "home", href: "/" },
-    { name: "Services", type: "link", target: "services", href: "/#services" },
-    {
-      name: "Industries",
-      type: "link",
-      target: "industries",
-      href: "/#industries",
-    },
-    {
-      name: "Portfolio",
-      type: "link",
-      target: "portfolio",
-      href: "/#portfolio",
-    },
-    { name: "FAQ", type: "route", target: "/faq", href: "/faq" },
-    {
-      name: "Rate Cards",
-      type: "route",
-      target: "/rate-card",
-      href: "/rate-card",
-    },
-    { name: "Contact", type: "link", target: "contact", href: "/#contact" },
+    // { name: "Home", target: "home", href: "/" },
+    { name: "About", target: "about", href: "/about", isRoute: true }, // Added About Route
+    // { name: "Services", target: "services", href: "/#services" },
+    { name: "Pricing", target: "pricing", href: "/pricing", isRoute: true },
+    // { name: "Industries", target: "industries", href: "/#industries" },
+    { name: "Portfolio", target: "portfolio", href: "/#portfolio" },
+    { name: "FAQ", target: "faq", href: "/faq", isRoute: true },
+    { name: "Rate Card", target: "rate", href: "/rate-card", isRoute: true },
+    { name: "Contact", target: "contact", href: "/#contact" },
   ];
 
-  const renderNavItem = (link: any, isMobile = false) => {
-    const baseClasses = isMobile
-      ? `block w-full text-left px-6 py-3 text-base font-medium transition duration-150`
-      : `text-sm font-medium transition duration-150 ease-in-out px-3 py-2`;
-
-    const activeClasses =
-      link.type !== "route" && activeSection === link.target
-        ? isMobile
-          ? "text-blue-600 bg-blue-50/50"
-          : "text-blue-600 font-semibold"
-        : isMobile
-        ? "text-gray-800 hover:bg-gray-50"
-        : "text-gray-700 hover:text-blue-600 hover:bg-gray-50";
-
-    const finalClasses = `${baseClasses} ${activeClasses}`;
-
-    return (
-      <a
-        key={link.name}
-        href={link.href}
-        className={finalClasses}
-        onClick={(e) => {
-          if (link.href.startsWith("/#") || link.href === "/") {
-            if (window.location.pathname === "/") {
-              e.preventDefault();
-              handleNavClick(link.target);
-            }
-          }
-          setIsMobileMenuOpen(false);
-        }}
-      >
-        {link.name}
-      </a>
-    );
-  };
-
   return (
-    <nav className="fixed top-0 w-full bg-white shadow-md z-50">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between h-16">
+    <nav
+      className={`fixed top-0 w-full z-[100] transition-all duration-500 border-b
+        ${
+          scrolled
+            ? isDark
+              ? "bg-black/80 border-white/10 backdrop-blur-md py-3"
+              : "bg-white/80 border-black/5 backdrop-blur-md py-3"
+            : "bg-transparent border-transparent py-5"
+        }`}
+    >
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between">
+        {/* Logo */}
         <div className="flex items-center">
-          <a
-            href="/"
-            className="flex-shrink-0 flex items-center cursor-pointer"
-          >
-            <span className="bg-blue-600 p-2 rounded-lg text-white">
-              <Camera className="w-5 h-5" />
-            </span>
-            <span className="ml-3 text-xl font-bold text-gray-900">
-              AeroEmperor
-            </span>
+          <a href="/" className="flex items-center group">
+            <img
+              src={viteimage}
+              alt="Logo"
+              className="h-8 w-auto object-contain"
+            />
           </a>
         </div>
 
-        <div className="hidden md:flex items-center space-x-6">
-          {desktopLinks.map((link) => renderNavItem(link))}
+        {/* Desktop Links & Actions */}
+        <div className="hidden md:flex items-center space-x-1">
+          {desktopLinks.map((link) => {
+            // Check if the current path matches the link href for visual active state on routes
+            const isCurrentRoute = window.location.pathname === link.href;
+            const isActive =
+              isActiveSection(link, activeSection) || isCurrentRoute;
 
-          {/* UPDATED: Uses handleQuoteClick */}
-          <button
-            onClick={handleQuoteClick}
-            className="text-white px-4 py-2 rounded-md text-sm font-medium transition duration-150 ease-in-out 
-                         bg-gradient-to-r from-blue-600 to-indigo-700 hover:from-blue-700 hover:to-indigo-800 shadow-md ml-4"
+            return (
+              <a
+                key={link.name}
+                href={link.href}
+                onClick={(e) => {
+                  if (!link.isRoute && window.location.pathname === "/") {
+                    e.preventDefault();
+                    handleNavClick(link.target);
+                  }
+                }}
+                className={`relative px-4 py-2 text-sm font-bold tracking-wide transition-all duration-300
+                  ${
+                    isActive
+                      ? "text-blue-500"
+                      : isDark
+                      ? "text-gray-400 hover:text-white"
+                      : "text-gray-600 hover:text-blue-600"
+                  }`}
+              >
+                {link.name}
+                {isActive && (
+                  <motion.div
+                    layoutId="activeTab"
+                    className="absolute bottom-0 left-4 right-4 h-0.5 bg-blue-500 rounded-full"
+                  />
+                )}
+              </a>
+            );
+          })}
+
+          {/* Theme Toggle */}
+          <motion.button
+            whileTap={{ scale: 0.9, rotate: 15 }}
+            onClick={toggleTheme}
+            className={`ml-4 p-2.5 rounded-xl border transition-colors
+              ${
+                isDark
+                  ? "bg-white/5 border-white/10 text-yellow-400 hover:bg-white/10"
+                  : "bg-gray-100 border-black/5 text-indigo-600 hover:bg-gray-200"
+              }`}
           >
-            Get Quote
-          </button>
+            <AnimatePresence mode="wait">
+              <motion.div
+                key={isDark ? "dark" : "light"}
+                initial={{ y: 10, opacity: 0 }}
+                animate={{ y: 0, opacity: 1 }}
+                exit={{ y: -10, opacity: 0 }}
+                transition={{ duration: 0.2 }}
+              >
+                {isDark ? (
+                  <Sun className="w-5 h-5" />
+                ) : (
+                  <Moon className="w-5 h-5" />
+                )}
+              </motion.div>
+            </AnimatePresence>
+          </motion.button>
+
+          <motion.button
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
+            onClick={() => handleNavClick("contact")}
+            className="ml-4 px-6 py-2.5 rounded-xl text-sm font-black text-white 
+              bg-gradient-to-r from-blue-600 to-indigo-700 shadow-lg shadow-blue-500/25"
+          >
+            GET QUOTE
+          </motion.button>
         </div>
 
-        <div className="md:hidden">
+        {/* Mobile Toggle */}
+        <div className="md:hidden flex items-center space-x-2">
+          <button
+            onClick={toggleTheme}
+            className={`p-2 rounded-lg ${
+              isDark ? "text-yellow-400" : "text-indigo-600"
+            }`}
+          >
+            {isDark ? <Sun size={20} /> : <Moon size={20} />}
+          </button>
           <button
             onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-            className="text-gray-700 hover:text-blue-600"
+            className={`p-2 rounded-lg ${
+              isDark ? "text-white" : "text-gray-900"
+            }`}
           >
             {isMobileMenuOpen ? <FaTimes size={24} /> : <FaBars size={24} />}
           </button>
         </div>
       </div>
 
-      {isMobileMenuOpen && (
-        <div className="md:hidden bg-white shadow-xl border-t border-gray-100 pb-2">
-          {desktopLinks.map((link) => renderNavItem(link, true))}
-          <div className="px-6 pt-3 pb-2">
-            <button
-              onClick={handleQuoteClick}
-              className="block w-full text-center px-4 py-3 rounded-md text-base font-medium transition duration-150 ease-in-out text-white 
-                       bg-gradient-to-r from-blue-600 to-indigo-700 hover:from-blue-700 hover:to-indigo-800 shadow-md"
-            >
-              Get Quote
-            </button>
-          </div>
-        </div>
-      )}
+      {/* Mobile Menu */}
+      <AnimatePresence>
+        {isMobileMenuOpen && (
+          <motion.div
+            initial={{ opacity: 0, height: 0 }}
+            animate={{ opacity: 1, height: "auto" }}
+            exit={{ opacity: 0, height: 0 }}
+            className={`md:hidden border-t overflow-hidden ${
+              isDark ? "bg-black border-white/10" : "bg-white border-black/5"
+            }`}
+          >
+            <div className="px-4 py-8 space-y-4">
+              {desktopLinks.map((link) => (
+                <a
+                  key={link.name}
+                  href={link.href}
+                  onClick={(e) => {
+                    if (!link.isRoute && window.location.pathname === "/") {
+                      e.preventDefault();
+                      handleNavClick(link.target);
+                    }
+                  }}
+                  className={`flex items-center justify-between px-4 py-3 rounded-2xl text-lg font-bold
+                    ${
+                      activeSection === link.target ||
+                      window.location.pathname === link.href
+                        ? "bg-blue-600 text-white"
+                        : isDark
+                        ? "text-gray-400 hover:bg-white/5"
+                        : "text-gray-700 hover:bg-gray-50"
+                    }`}
+                >
+                  {link.name}
+                  <ChevronRight className="w-5 h-5 opacity-50" />
+                </a>
+              ))}
+              <button
+                onClick={() => handleNavClick("contact")}
+                className="w-full mt-4 py-4 rounded-2xl bg-blue-600 text-white font-black shadow-xl"
+              >
+                GET QUOTE
+              </button>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </nav>
   );
+};
+
+// Helper to determine active state
+const isActiveSection = (link: any, activeSection: string) => {
+  return !link.isRoute && activeSection === link.target;
 };
 
 export default NavBar;

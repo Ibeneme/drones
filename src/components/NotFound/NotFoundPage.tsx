@@ -1,79 +1,120 @@
 import React from "react";
 import { motion } from "framer-motion";
 import type { Variants } from "framer-motion";
-import { Home, ArrowLeft } from "lucide-react";
+import { Home, ArrowLeft, PlaneLanding } from "lucide-react";
+import { useTheme } from "../../contexts/ThemeProvider";
 
 const NotFoundPage: React.FC = () => {
-  // Framer Motion Variants
+  const { theme } = useTheme();
+  const isDark = theme === "dark";
+
   const containerVariants: Variants = {
     hidden: { opacity: 0 },
     visible: {
       opacity: 1,
-      transition: {
-        staggerChildren: 0.2,
-      },
+      transition: { staggerChildren: 0.15 },
     },
   };
 
   const itemVariants: Variants = {
-    hidden: { y: 20, opacity: 0 },
+    hidden: { y: 30, opacity: 0 },
     visible: {
       y: 0,
       opacity: 1,
-      transition: {
-        type: "spring" as const,
-        stiffness: 100,
-        damping: 15,
-      },
+      transition: { type: "spring", stiffness: 80, damping: 15 },
     },
   };
 
   return (
-    <div className="min-h-[70vh] flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
+    <div
+      className={`min-h-screen flex items-center justify-center transition-colors duration-500 px-6 overflow-hidden relative
+      ${isDark ? "bg-[#080808]" : "bg-gray-50"}`}
+    >
+      {/* --- BACKGROUND DECOR --- */}
+      <div
+        className={`absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] blur-[120px] rounded-full opacity-10
+        ${isDark ? "bg-blue-600" : "bg-blue-400"}`}
+      />
+
       <motion.div
-        className="max-w-md w-full space-y-8 text-center"
+        className="max-w-2xl w-full relative z-10 text-center"
         variants={containerVariants}
         initial="hidden"
         animate="visible"
       >
-        <motion.div variants={itemVariants}>
-          <p className="text-9xl font-extrabold text-gray-200">404</p>
+        {/* Animated Icon */}
+        <motion.div
+          variants={itemVariants}
+          animate={{ y: [0, -15, 0] }}
+          transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
+          className="flex justify-center mb-8"
+        >
+          <div
+            className={`p-6 rounded-3xl border shadow-2xl
+            ${
+              isDark
+                ? "bg-white/5 border-white/10 text-blue-500"
+                : "bg-white border-gray-200 text-blue-600"
+            }`}
+          >
+            <PlaneLanding size={64} strokeWidth={1.5} />
+          </div>
         </motion.div>
 
-        <motion.div variants={itemVariants}>
-          <h1 className="text-3xl font-extrabold text-gray-900 mt-4">
-            Page Not Found
-          </h1>
+        {/* 404 Text */}
+        <motion.div variants={itemVariants} className="relative">
+          <p
+            className={`text-[12rem] md:text-[16rem] font-black leading-none select-none tracking-tighter
+            ${isDark ? "text-white/[0.03]" : "text-gray-200/50"}`}
+          >
+            404
+          </p>
+          <div className="absolute inset-0 flex items-center justify-center">
+            <h1
+              className={`text-4xl md:text-6xl font-black tracking-tight
+               ${isDark ? "text-white" : "text-gray-900"}`}
+            >
+              Signal <span className="text-blue-500">Lost</span>
+            </h1>
+          </div>
         </motion.div>
 
-        <motion.div variants={itemVariants}>
-          <p className="mt-2 text-lg text-gray-600">
-            Oops! It looks like you've navigated to a page that doesn't exist.
-            The drone must have flown off with this URL.
+        <motion.div variants={itemVariants} className="mt-8">
+          <p
+            className={`text-lg md:text-xl font-medium max-w-lg mx-auto leading-relaxed
+            ${isDark ? "text-gray-400" : "text-gray-600"}`}
+          >
+            The coordinates you requested are outside our current flight path.
+            The drone has safely returned to base.
           </p>
         </motion.div>
 
+        {/* Action Buttons */}
         <motion.div
-          className="flex flex-col sm:flex-row justify-center space-y-4 sm:space-y-0 sm:space-x-4 pt-4"
+          className="flex flex-col sm:flex-row justify-center gap-4 mt-12"
           variants={itemVariants}
         >
           <a
             href="/"
-            className="inline-flex items-center justify-center px-6 py-3 border border-transparent text-base font-medium rounded-md shadow-md text-white 
-                       bg-gradient-to-r from-blue-600 to-indigo-700 hover:from-blue-700 hover:to-indigo-800 transition"
+            className="inline-flex items-center justify-center px-8 py-4 rounded-2xl font-black uppercase tracking-widest text-sm text-white 
+                       bg-gradient-to-r from-blue-600 to-indigo-700 shadow-xl shadow-blue-500/25 hover:scale-105 transition-transform"
           >
-            <Home className="mr-2 w-5 h-5" />
-            Go to Homepage
+            <Home className="mr-3 w-5 h-5" />
+            Return to Base
           </a>
 
-          <a
-            href="#"
+          <button
             onClick={() => window.history.back()}
-            className="inline-flex items-center justify-center px-6 py-3 border border-gray-300 text-base font-medium rounded-md text-gray-700 bg-white hover:bg-gray-100 transition"
+            className={`inline-flex items-center justify-center px-8 py-4 rounded-2xl font-black uppercase tracking-widest text-sm border transition-all
+              ${
+                isDark
+                  ? "border-white/10 text-white hover:bg-white/5"
+                  : "border-gray-200 text-gray-700 bg-white hover:bg-gray-50 shadow-sm"
+              }`}
           >
-            <ArrowLeft className="mr-2 w-5 h-5" />
-            Go Back
-          </a>
+            <ArrowLeft className="mr-3 w-5 h-5" />
+            Previous Sector
+          </button>
         </motion.div>
       </motion.div>
     </div>

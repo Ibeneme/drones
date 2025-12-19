@@ -16,8 +16,10 @@ import {
   Info,
   AlertTriangle,
   CheckCircle,
+  ChevronRight,
 } from "lucide-react";
 import fallbackImage from "../assets/images/herodrone.jpeg";
+import { useTheme } from "../contexts/ThemeProvider";
 
 interface RateItem {
   title: string;
@@ -218,156 +220,263 @@ const rateCategories: RateCategory[] = [
   },
 ];
 
-// --- 2. Main Component ---
-
-interface RateCardProps {
-  serv1?: string; // Optional prop for the header image
-}
-
-const RateCard: React.FC<RateCardProps> = ({ serv1 }) => {
+const RateCard: React.FC<{ serv1?: string }> = ({ serv1 }) => {
+  const { theme } = useTheme();
+  const isDark = theme === "dark";
   const [activeTab, setActiveTab] = useState(rateCategories[0].title);
-
-  // Framer Motion variants
-  const contentVariants = {
-    hidden: { opacity: 0, y: 10 },
-    visible: { opacity: 1, y: 0, transition: { duration: 0.4 } },
-  };
 
   const currentCategory = rateCategories.find((cat) => cat.title === activeTab);
 
   return (
-    <section className="bg-white pt-0 pb-16 sm:pb-24">
-      {/* Header Image and Text */}
-      <div className="relative h-120 overflow-hidden mb-16">
-        <img
+    <section
+      className={`min-h-screen transition-colors duration-500 ${
+        isDark ? "bg-black" : "bg-white"
+      }`}
+    >
+      {/* --- PREMIUM HERO HEADER --- */}
+      <div className="relative h-[60vh] overflow-hidden">
+        <motion.img
+          initial={{ scale: 1.1 }}
+          animate={{ scale: 1 }}
+          transition={{ duration: 10, repeat: Infinity, repeatType: "reverse" }}
           src={serv1 || fallbackImage}
-          alt="Drone flying over scenic landscape"
-          className="w-full h-full object-cover brightness-[.65]"
+          className="w-full h-full object-cover"
         />
-        <div className="absolute inset-0 bg-gray-900/60 flex items-center justify-center">
-          <div className="max-w-4xl text-center px-4 sm:px-6 lg:px-8">
-            <h1 className="text-4xl md:text-5xl font-extrabold text-white mb-3">
-              AeroEmperor Rate Card
-            </h1>
-            <p className="text-xl text-gray-200">
-              World-class aerial film, photography, and data capture using elite
-              pilots, advanced drone systems, and proven workflows.
-            </p>
+        <div
+          className={`absolute inset-0 flex items-center justify-center
+          ${
+            isDark
+              ? "bg-black/70 backdrop-blur-[2px]"
+              : "bg-blue-900/40 backdrop-blur-[2px]"
+          }`}
+        >
+          <div className="max-w-4xl text-center px-4">
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.2 }}
+            >
+              <span className="inline-block px-4 py-1 rounded-full text-[10px] font-black uppercase tracking-[0.3em] bg-blue-600 text-white mb-6">
+                Investment Guide 2025
+              </span>
+              <h1 className="text-5xl md:text-7xl font-black text-white mb-6 tracking-tighter">
+                Transparent <span className="text-blue-500">Pricing.</span>
+              </h1>
+              <p className="text-xl text-gray-200 font-medium max-w-2xl mx-auto leading-relaxed">
+                World-class aerial intelligence and cinematography powered by
+                elite pilots and enterprise-grade hardware.
+              </p>
+            </motion.div>
           </div>
         </div>
       </div>
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        {/* Tab Navigation */}
-        <div className="flex flex-wrap justify-center space-x-2 md:space-x-4 mb-12">
-          {rateCategories.map((category) => (
-            <button
-              key={category.title}
-              onClick={() => setActiveTab(category.title)}
-              className={`flex items-center px-4 py-2 rounded-full font-medium text-sm transition-colors duration-300 ${
-                activeTab === category.title
-                  ? "bg-blue-600 text-white shadow-lg"
-                  : "bg-gray-100 text-gray-700 hover:bg-gray-200"
-              }`}
-            >
-              <category.icon className="w-4 h-4 mr-2" />
-              {category.title}
-            </button>
-          ))}
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 -mt-20 relative z-10 pb-24">
+        {/* --- TAB NAVIGATION (Glassmorphism) --- */}
+        <div
+          className={`p-2 rounded-2xl flex flex-wrap justify-center gap-2 mb-16 backdrop-blur-xl border
+          ${
+            isDark
+              ? "bg-white/5 border-white/10"
+              : "bg-white/80 border-gray-200 shadow-xl"
+          }`}
+        >
+          {rateCategories.map((category) => {
+            const isActive = activeTab === category.title;
+            return (
+              <button
+                key={category.title}
+                onClick={() => setActiveTab(category.title)}
+                className={`flex items-center px-6 py-3 rounded-xl font-bold text-sm transition-all duration-300
+                  ${
+                    isActive
+                      ? "bg-blue-600 text-white shadow-lg shadow-blue-500/40"
+                      : isDark
+                      ? "text-gray-400 hover:text-white hover:bg-white/5"
+                      : "text-gray-600 hover:bg-gray-100"
+                  }`}
+              >
+                <category.icon
+                  className={`w-4 h-4 mr-2 ${
+                    isActive ? "text-white" : "text-blue-500"
+                  }`}
+                />
+                {category.title}
+              </button>
+            );
+          })}
         </div>
 
-        {/* Rate Content */}
+        {/* --- RATE CONTENT GRID --- */}
         <AnimatePresence mode="wait">
-          {currentCategory && (
-            <motion.div
-              key={activeTab}
-              initial="hidden"
-              animate="visible"
-              exit="hidden"
-              variants={contentVariants}
-              className="grid grid-cols-1 lg:grid-cols-3 gap-8"
-            >
-              {currentCategory.items.map((item, index) => (
-                <div
-                  key={index}
-                  className="bg-gray-50 p-6 rounded-xl border border-gray-200 shadow-sm flex flex-col hover:shadow-md transition duration-300"
-                >
-                  <div className="flex mb-8 items-start justify-between">
-                    <h3 className="text-xl font-bold text-gray-900">
-                      {item.title}
-                    </h3>
-                    <div className="p-2 bg-blue-100 text-blue-600 rounded-lg mb-8">
-                      <item.icon className="w-6 h-6" />
-                    </div>
+          <motion.div
+            key={activeTab}
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -20 }}
+            transition={{ duration: 0.4 }}
+            className="grid grid-cols-1 lg:grid-cols-3 gap-8"
+          >
+            {currentCategory?.items.map((item, index) => (
+              <motion.div
+                key={index}
+                whileHover={{ y: -10 }}
+                className={`relative group p-8 rounded-[2rem] border transition-all duration-500 flex flex-col
+                  ${
+                    isDark
+                      ? "bg-white/5 border-white/10 hover:bg-white/10"
+                      : "bg-white border-gray-100 shadow-xl hover:shadow-2xl"
+                  }`}
+              >
+                <div className="flex justify-between items-start mb-8">
+                  <div
+                    className={`p-3 rounded-2xl ${
+                      isDark
+                        ? "bg-blue-500/20 text-blue-400"
+                        : "bg-blue-50 text-blue-600"
+                    }`}
+                  >
+                    <item.icon className="w-6 h-6" />
                   </div>
+                  <span
+                    className={`text-[10px] font-black uppercase tracking-widest ${
+                      isDark ? "text-gray-500" : "text-gray-400"
+                    }`}
+                  >
+                    Standard Tier
+                  </span>
+                </div>
 
-                  <p className="text-3xl font-extrabold text-blue-600 mb-3 border-b pb-3 border-blue-100">
+                <h3
+                  className={`text-2xl font-black mb-2 ${
+                    isDark ? "text-white" : "text-gray-900"
+                  }`}
+                >
+                  {item.title}
+                </h3>
+
+                <div className="flex items-baseline gap-1 mb-6">
+                  <span className="text-3xl font-black text-blue-500">
                     {item.price}
-                    <span className="text-sm font-medium text-gray-500 ml-1">
-                      +VAT
-                    </span>
-                  </p>
+                  </span>
+                  <span
+                    className={`text-xs font-bold ${
+                      isDark ? "text-gray-500" : "text-gray-400"
+                    }`}
+                  >
+                    +VAT
+                  </span>
+                </div>
 
-                  <p className="text-sm text-gray-700 mb-4">
-                    {item.description}
-                  </p>
+                <p
+                  className={`text-sm leading-relaxed mb-8 ${
+                    isDark ? "text-gray-400" : "text-gray-600"
+                  }`}
+                >
+                  {item.description}
+                </p>
 
-                  <ul className="space-y-2 mt-auto">
+                <div
+                  className={`mt-auto space-y-4 pt-8 border-t ${
+                    isDark ? "border-white/5" : "border-gray-50"
+                  }`}
+                >
+                  <p
+                    className={`text-[10px] font-black uppercase tracking-tighter ${
+                      isDark ? "text-blue-400" : "text-blue-600"
+                    }`}
+                  >
+                    Service Includes:
+                  </p>
+                  <ul className="space-y-3">
                     {item.includes.map((inc, i) => (
-                      <li
-                        key={i}
-                        className="flex items-center text-sm text-gray-600"
-                      >
-                        <Check className="w-4 h-4 text-green-500 mr-2 flex-shrink-0" />
-                        {inc}
+                      <li key={i} className="flex items-start text-sm">
+                        <Check className="w-4 h-4 text-blue-500 mr-3 mt-0.5 flex-shrink-0" />
+                        <span
+                          className={isDark ? "text-gray-300" : "text-gray-700"}
+                        >
+                          {inc}
+                        </span>
                       </li>
                     ))}
                   </ul>
-
-                  {item.notes && (
-                    <div className="mt-4 p-3 bg-yellow-50 rounded-lg border border-yellow-200">
-                      <p className="text-xs text-yellow-800 flex items-start">
-                        <Info className="w-4 h-4 mr-1 flex-shrink-0 mt-0.5" />
-                        {item.notes}
-                      </p>
-                    </div>
-                  )}
                 </div>
-              ))}
-            </motion.div>
-          )}
+
+                {item.notes && (
+                  <div
+                    className={`mt-6 p-4 rounded-xl flex gap-3 items-start border
+                    ${
+                      isDark
+                        ? "bg-yellow-500/5 border-yellow-500/20 text-yellow-200"
+                        : "bg-yellow-50 border-yellow-100 text-yellow-800"
+                    }`}
+                  >
+                    <Info className="w-4 h-4 mt-0.5 flex-shrink-0" />
+                    <p className="text-[11px] font-medium italic leading-snug">
+                      {item.notes}
+                    </p>
+                  </div>
+                )}
+              </motion.div>
+            ))}
+          </motion.div>
         </AnimatePresence>
 
-        <div className="mt-16 pt-8 backdrop-blur-md bg-blue-600  p-6 rounded-lg">
-          <h3 className="text-xl font-extrabold text-white mb-6 flex items-center">
-            <AlertTriangle className="w-6 h-6 text-white mr-3" />
-            Important Notes & Policy
-          </h3>
-          <ul className="space-y-3 text-sm text-white">
-            <li className="flex items-start">
-              <CheckCircle className="w-5 h-5  mr-3 mt-1 flex-shrink-0" />
-              <span className="font-medium">Excludes VAT:</span> All listed
-              rates are exclusive of Value Added Tax.
-            </li>
-            <li className="flex items-start">
-              <CheckCircle className="w-5 h-5  mr-3 mt-1 flex-shrink-0" />
-              <span className="font-medium">Scope Changes:</span> Weather
-              delays, additional locations, extended flight time, or scope
-              changes may incur additional charges.
-            </li>
-            <li className="flex items-start">
-              <CheckCircle className="w-5 h-5  mr-3 mt-1 flex-shrink-0" />
-              <span className="font-medium">Additional Costs:</span>{" "}
-              Permissions, specialist permits, travel, and accommodation are
-              quoted separately where applicable.
-            </li>
-            <li className="flex items-start">
-              <CheckCircle className="w-5 h-5  mr-3 mt-1 flex-shrink-0" />
-              <span className="font-medium">Final Pricing:</span> Pricing is
-              confirmed only after a comprehensive project briefing.
-            </li>
-          </ul>
-        </div>
+        {/* --- TERMS & POLICY BOX --- */}
+        <motion.div
+          initial={{ opacity: 0 }}
+          whileInView={{ opacity: 1 }}
+          className={`mt-20 p-10 md:p-14 rounded-[3rem] border relative overflow-hidden
+            ${
+              isDark
+                ? "bg-white/5 border-white/10"
+                : "bg-gray-50 border-gray-200 shadow-inner"
+            }`}
+        >
+          <div className="flex flex-col md:flex-row gap-12 items-center relative z-10">
+            <div className="flex-1">
+              <h3
+                className={`text-3xl font-black mb-6 flex items-center gap-3 ${
+                  isDark ? "text-white" : "text-gray-900"
+                }`}
+              >
+                <AlertTriangle className="w-8 h-8 text-blue-500" />
+                Terms of Engagement
+              </h3>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                {[
+                  "All rates exclude VAT at 20%",
+                  "Travel quoted at £0.55 per mile",
+                  "Weather delays may incur standby fees",
+                  "Specialist permits quoted upon request",
+                  "50% Deposit required for new clients",
+                  "Cancellation within 48h incurs 50% fee",
+                ].map((policy, i) => (
+                  <div key={i} className="flex items-center gap-3">
+                    <CheckCircle className="w-5 h-5 text-blue-500" />
+                    <span
+                      className={`text-sm font-bold ${
+                        isDark ? "text-gray-400" : "text-gray-600"
+                      }`}
+                    >
+                      {policy}
+                    </span>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            <div className="flex-shrink-0">
+              <motion.button
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                className="bg-blue-600 text-white px-10 py-5 rounded-2xl font-black uppercase tracking-widest text-sm shadow-xl shadow-blue-500/40 flex items-center gap-2"
+              >
+                Download PDF Full Rates <ChevronRight className="w-5 h-5" />
+              </motion.button>
+            </div>
+          </div>
+        </motion.div>
       </div>
     </section>
   );

@@ -5,6 +5,8 @@ import NavBar from "./components/NavBar/NavBar";
 import NotFoundPage from "./components/NotFound/NotFoundPage";
 import FAQSection from "./Pages/Faq";
 import RateCard from "./Pages/RateCard";
+import PricingPage from "./Pages/PricingPage";
+import AboutUs from "./Pages/AboutUs";
 
 function App() {
   // Scroll to a section by id
@@ -22,6 +24,8 @@ function App() {
             <Route path="/" element={<Home />} />
             <Route path="/faq" element={<FAQSection />} />
             <Route path="/rate-card" element={<RateCard />} />
+            <Route path="/pricing" element={<PricingPage />} />
+            <Route path="/about" element={<AboutUs />} />
             <Route path="*" element={<NotFoundPage />} />
           </Routes>
         </main>

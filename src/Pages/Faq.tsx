@@ -1,8 +1,7 @@
 import React, { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { ChevronDown, Mail } from "lucide-react";
-
-// --- 1. Data Definitions ---
+import { useTheme } from "../contexts/ThemeProvider";
 
 interface FaqItem {
   question: string;
@@ -86,46 +85,77 @@ const faqData: FaqItem[] = [
       "We conduct thorough planning before every project – including risk assessments, method statements, drone maintenance, and airspace checks – to ensure the highest safety standards.",
   },
 ];
-
-// --- 2. Reusable Accordion Item Component ---
-
 const AccordionItem: React.FC<
   FaqItem & {
     isOpen: boolean;
     setOpen: (index: number | null) => void;
     index: number;
+    isDark: boolean;
   }
-> = ({ question, answer, isOpen, setOpen, index }) => {
+> = ({ question, answer, isOpen, setOpen, index, isDark }) => {
   return (
     <motion.div
-      className="border-b border-gray-200"
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      transition={{ duration: 0.3, delay: index * 0.05 }} // Stagger initial load
+      className={`border-b transition-colors duration-300 ${
+        isDark ? "border-white/10" : "border-gray-100"
+      }`}
+      initial={{ opacity: 0, y: 10 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.4, delay: index * 0.05 }}
     >
       <button
         onClick={() => setOpen(isOpen ? null : index)}
-        className="flex justify-between items-center w-full py-4 text-left font-semibold text-gray-900 hover:text-blue-600 transition"
+        className="flex justify-between items-center w-full py-6 text-left group"
       >
-        <span>{question}</span>
-        <motion.span
-          animate={{ rotate: isOpen ? 180 : 0 }}
-          transition={{ duration: 0.3 }}
+        <span
+          className={`text-lg font-bold transition-colors duration-300 pr-8
+          ${
+            isOpen
+              ? "text-blue-500"
+              : isDark
+              ? "text-gray-200 group-hover:text-white"
+              : "text-gray-900 group-hover:text-blue-600"
+          }`}
         >
-          <ChevronDown className="w-5 h-5 text-blue-600" />
-        </motion.span>
+          {question}
+        </span>
+        <motion.div
+          animate={{
+            rotate: isOpen ? 180 : 0,
+            scale: isOpen ? 1.1 : 1,
+          }}
+          className={`flex-shrink-0 p-2 rounded-full transition-colors
+            ${
+              isOpen
+                ? isDark
+                  ? "bg-blue-500/20"
+                  : "bg-blue-50"
+                : "bg-transparent"
+            }`}
+        >
+          <ChevronDown
+            className={`w-5 h-5 ${
+              isOpen
+                ? "text-blue-500"
+                : isDark
+                ? "text-gray-500"
+                : "text-gray-400"
+            }`}
+          />
+        </motion.div>
       </button>
 
-      <AnimatePresence>
+      <AnimatePresence initial={false}>
         {isOpen && (
           <motion.div
             initial={{ height: 0, opacity: 0 }}
             animate={{ height: "auto", opacity: 1 }}
             exit={{ height: 0, opacity: 0 }}
-            transition={{ duration: 0.3 }}
-            className="overflow-hidden"
+            transition={{ duration: 0.3, ease: [0.04, 0.62, 0.23, 0.98] }}
           >
-            <p className="pb-4 text-gray-600 text-sm leading-relaxed pr-6">
+            <p
+              className={`pb-6 text-base leading-relaxed max-w-3xl
+              ${isDark ? "text-gray-400" : "text-gray-600"}`}
+            >
               {answer}
             </p>
           </motion.div>
@@ -135,31 +165,71 @@ const AccordionItem: React.FC<
   );
 };
 
-// --- 3. Main FAQ Component ---
-
 const FAQSection: React.FC = () => {
   const [openIndex, setOpenIndex] = useState<number | null>(null);
+  const { theme } = useTheme();
+  const isDark = theme === "dark";
 
   return (
-    <section className="bg-white py-16 sm:py-24 mt-[100px]">
-      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+    <section
+      className={`py-24 sm:py-32 transition-colors duration-500 overflow-hidden
+      ${isDark ? "bg-black" : "bg-white"}`}
+    >
+      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 relative">
+        {/* Decorative Background Blur */}
+        <div
+          className={`absolute -top-20 -left-20 w-64 h-64 blur-[120px] rounded-full opacity-10 pointer-events-none
+          ${isDark ? "bg-blue-600" : "bg-blue-400"}`}
+        />
+
         {/* Header Section */}
-        <div className="text-center mb-12">
-          <p className="text-sm font-medium text-blue-600 bg-blue-100/50 py-1 px-3 inline-block rounded-full mb-3">
-            AeroEmperor FAQs
-          </p>
-          <h2 className="text-3xl md:text-4xl font-extrabold text-gray-900 mb-4">
-            Common Questions
-          </h2>
-          <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-            Without a doubt, everyone has questions when it comes to drones.
-            Here are some of the most common ones we receive – if you need
-            further details, please do get in touch.
-          </p>
+        <div className="text-center mb-16 relative z-10">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+          >
+            <span
+              className={`inline-block px-4 py-1.5 rounded-full text-[10px] font-black uppercase tracking-[0.2em] mb-6 border
+              ${
+                isDark
+                  ? "bg-blue-500/10 border-blue-500/20 text-blue-400"
+                  : "bg-blue-50 border-blue-100 text-blue-600"
+              }`}
+            >
+              Knowledge Base
+            </span>
+            <h2
+              className={`text-4xl md:text-5xl font-black mb-6 tracking-tight ${
+                isDark ? "text-white" : "text-gray-900"
+              }`}
+            >
+              Common <span className="text-blue-500">Questions</span>
+            </h2>
+            <p
+              className={`text-lg max-w-2xl mx-auto ${
+                isDark ? "text-gray-400" : "text-gray-600"
+              }`}
+            >
+              Understanding drone regulations and capabilities is key to a
+              successful project. Find answers to our most frequently asked
+              questions below.
+            </p>
+          </motion.div>
         </div>
 
         {/* Accordion Container */}
-        <div className="bg-white rounded-xl  p-6 md:p-10 border border-gray-100">
+        <motion.div
+          className={`rounded-[2.5rem] p-4 md:p-10 border transition-all duration-500
+            ${
+              isDark
+                ? "bg-white/5 border-white/10"
+                : "bg-gray-50 border-gray-100 shadow-sm"
+            }`}
+          initial={{ opacity: 0, scale: 0.95 }}
+          whileInView={{ opacity: 1, scale: 1 }}
+          viewport={{ once: true }}
+        >
           {faqData.map((item, index) => (
             <AccordionItem
               key={index}
@@ -167,23 +237,57 @@ const FAQSection: React.FC = () => {
               index={index}
               isOpen={openIndex === index}
               setOpen={setOpenIndex}
+              isDark={isDark}
             />
           ))}
-        </div>
+        </motion.div>
 
-        {/* CTA Banner/Footer */}
-        <div className="mt-12 p-8 bg-blue-600 rounded-xl  flex flex-col md:flex-row items-center justify-between text-white">
-          <p className="text-xl font-semibold mb-4 md:mb-0">
-            Still have questions? Contact our experts directly.
-          </p>
-          <a
-            href="#contact" // Link to your Contact section
-            className="inline-flex items-center px-6 py-3 border border-white text-base font-medium rounded-md text-blue-600 bg-white hover:bg-gray-100 transition shadow-md"
+        {/* CTA Banner */}
+        <motion.div
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          className={`mt-16 p-8 md:p-12 rounded-[2rem] relative overflow-hidden flex flex-col md:flex-row items-center justify-between gap-8
+            ${
+              isDark
+                ? "bg-blue-600/10 border border-blue-500/20"
+                : "bg-blue-600 shadow-2xl shadow-blue-600/30"
+            }`}
+        >
+          {/* Subtle sparkle effect for light mode banner */}
+          {!isDark && (
+            <div className="absolute inset-0 bg-gradient-to-tr from-transparent via-white/10 to-transparent pointer-events-none" />
+          )}
+
+          <div className="relative z-10 text-center md:text-left">
+            <h3
+              className={`text-2xl font-black mb-2 ${
+                isDark ? "text-white" : "text-white"
+              }`}
+            >
+              Still have questions?
+            </h3>
+            <p className={`${isDark ? "text-gray-400" : "text-blue-100"}`}>
+              Our experts are ready to discuss your specific mission
+              requirements.
+            </p>
+          </div>
+
+          <motion.a
+            href="#contact"
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
+            className={`relative z-10 inline-flex items-center px-8 py-4 text-sm font-black uppercase tracking-widest rounded-xl transition shadow-xl
+              ${
+                isDark
+                  ? "bg-blue-600 text-white hover:bg-blue-500"
+                  : "bg-white text-blue-600 hover:bg-gray-50"
+              }`}
           >
-            <Mail className="mr-2 w-5 h-5" />
-            Get in Touch Now
-          </a>
-        </div>
+            <Mail className="mr-3 w-5 h-5" />
+            Get in Touch
+          </motion.a>
+        </motion.div>
       </div>
     </section>
   );

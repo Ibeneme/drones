@@ -5,6 +5,7 @@ import FeaturesAndIndustries from "../components/FeaturesAndIndustries/FeaturesA
 import PortfolioAndTestimonials from "../components/Portfolio/PortfolioAndTestimonials";
 import ContactAndQuote from "../components/ContactAndQuote/ContactAndQuote";
 import NavBar from "../components/NavBar/NavBar";
+import { useTheme } from "../contexts/ThemeProvider";
 // Assuming you have imported all necessary assets for other components
 
 const Home: React.FC = () => {
@@ -76,9 +77,14 @@ const Home: React.FC = () => {
       window.scrollTo({ top, behavior: "smooth" });
     }
   };
-
+  const { theme } = useTheme();
+  const isDark = theme === "dark";
   return (
-    <div>
+    <div
+      className={`transition-colors duration-500 ${
+        isDark ? "bg-black text-white" : "bg-white text-gray-900"
+      }`}
+    >
       <NavBar scrollToSection={scrollToSection} />
 
       <div id="home" ref={homeRef}>
